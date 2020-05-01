@@ -17,7 +17,8 @@
     "view",
     "dom",
     "html",
-    "state"
+    "state",
+    "template"
   ],
   "author": "John Patrick Lataquin",
   "license": "MIT",
