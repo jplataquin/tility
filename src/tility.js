@@ -1,5 +1,5 @@
 /*!
- * Tility v1.0.0
+ * Tility v1.0.4
  * A suite of javascript classes that will help you build front end web interfaces.
  *
  * Author John Patrick Lataquin
@@ -433,10 +433,10 @@ class Template {
                 _target.splice(index, 0, item);
                 
                 //Get the element before the new element
-                let before = _target[index - 1] ?? null;
+                let before = _target[index - 1] || null;
 
                 //Get the element after the new element
-                let after = _target[index + 1] ?? null;
+                let after = _target[index + 1] || null;
                 
                 //If no before and after then skip element update
                 if(before == null && after == null){
