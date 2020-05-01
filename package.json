@@ -1,0 +1,28 @@
+{
+  "name": "tility",
+  "version": "1.0.0",
+  "description": "Tility is a suite of classes that will help you build dynamic HTML interfaces and Single Page Applications using Javascript. It is designed to keep your code intuitive and simple amidst complex project requirements.",
+  "main": "tility.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jplataquin/tility.git"
+  },
+  "keywords": [
+    "frontend",
+    "library",
+    "ui",
+    "view",
+    "dom",
+    "html",
+    "state"
+  ],
+  "author": "John Patrick Lataquin",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jplataquin/tility/issues"
+  },
+  "homepage": "https://github.com/jplataquin/tility#readme"
+}
