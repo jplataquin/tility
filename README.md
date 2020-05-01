@@ -22,6 +22,7 @@ or you can to download the zip file, place it in your directory and use ES6 impo
 
 # Template Class
 **Basic Usage** 
+
 The Template class allows you to create HTML tags from an instance using their names as methods. They can be ordered and arranged like regular HTML tags, but can be treated like regular javascript DOM objects.
 
 
@@ -57,6 +58,7 @@ The output will be similar to this
 
 
 **Adding attributes**
+
 You can also add attributes to the element like you would in HTML tags by using an object literal as an argument.
 
     const t = new Template();
@@ -75,6 +77,7 @@ This would result into
 	    <input type="text" value="hello world"/>
 	</div>
 **Using loops, if statements, and built in methods**
+
 The Template class allows you to manipulate HTML tags as if they were javascript variables and objects. 
 
     const t = new Template();
@@ -115,6 +118,7 @@ The Template class allows you to manipulate HTML tags as if they were javascript
 	
 	document.body.append(t.compile());
 **You can extend the Template class to create psuedo components**
+
 Sometimes you want to speed things up by writing reusable HTML templates, but you don't want to create a full blown web components or you just want to keep things simple. 
 
 Here is an example that extends the Template class to follow the bootstrap form-group template.
