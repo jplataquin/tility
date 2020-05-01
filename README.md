@@ -14,7 +14,7 @@ Tility offers 3 classes to aid you in your next project.
 
 If you are using npm.
 
-    npm -i tility
+    npm i tility
 
 or you can to download the zip file, place it in your directory and use ES6 import.
 
