@@ -280,7 +280,7 @@ You can bind an array of objects that will automatically render to the dom. And 
 		age:'22'
 	});
 
-	//You can even add new items at specific at a specific index and still see real time updates on the dom
+	//You can even add new items at a specific index and see real time updates on the dom
 	model.data.insert({
 		name:'JP',
 		age:'30'
