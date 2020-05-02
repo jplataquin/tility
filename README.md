@@ -188,7 +188,7 @@ Here is an example that extends the Template class to follow the bootstrap html 
 							//Use our extended method to render the bootstrap form-group template
 							t.inputField({label:'Input 1'});
 							
-						});//div
+						});//col
 						
 						t.col({val:6},()=>{
 							
