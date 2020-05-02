@@ -16,20 +16,20 @@ If you are using npm.
 
     npm i tility
 
-or you can to download the zip file, place it in your directory and use ES6 import.
+or you can to download the zip file, place it in your directory and use ESM import.
 
     import {Template,View,Component} from './path-to-tility/src/tility.js'
 
 # Template Class
 **Basic Usage** 
 
-The Template class allows you to create HTML tags from an instance using their names as methods. They can be ordered and arranged like regular HTML tags, but can be treated like regular javascript DOM objects.
+The Template class allows you to create HTML tags from the Template object instance using their names as methods. They can be ordered and arranged like regular HTML tags and can be treated like regular javascript DOM objects.
 
 
        import {Template} from './tility.js';
        
        //Create a Template instance
-       cost t = new Template();
+       const t = new Template();
        
        //Arrange them as you would like in a normal HTML file.
        t.h1('Tility test');
@@ -59,7 +59,7 @@ The output will be similar to this
 
 **Adding attributes**
 
-You can also add attributes to the element like you would in HTML tags by using an object literal as an argument.
+You can also add attributes to them by using an object literal as an argument.
 
     const t = new Template();
     
@@ -71,11 +71,12 @@ You can also add attributes to the element like you would in HTML tags by using 
     
     document.body.append(content);
 
-This would result into 
+This code would result into 
 
     <div class="col-lg-12" id="myID">
 	    <input type="text" value="hello world"/>
 	</div>
+
 **Using loops, if statements, and built in methods**
 
 The Template class allows you to manipulate HTML tags as if they were javascript variables and objects. 
@@ -121,7 +122,7 @@ The Template class allows you to manipulate HTML tags as if they were javascript
 
 Sometimes you want to speed things up by writing reusable HTML templates, but you don't want to create a full blown web components or you just want to keep things simple. 
 
-Here is an example that extends the Template class to follow the bootstrap form-group template.
+Here is an example that extends the Template class to follow the bootstrap html template.
 
 *BootstrapTemplate.js*
 
@@ -132,6 +133,24 @@ Here is an example that extends the Template class to follow the bootstrap form-
 		    super();
 		}
 		
+		container(){
+			let {param,callback} = this.reduce(arguments);
+
+			return this.div({class:'container'},callback);
+		}
+
+		row(){
+			let {param,callback} = this.reduce(arguments);
+
+			return this.div({class:'row'},callback);
+		}
+
+		col(){
+			let {param,callback} = this.reduce(arguments);
+
+			return this.div({class:'col-lg-'+param.val},callback);
+		}
+
 		inputField(){
 			let {param,callback} = this.reduce(arguments);
 			
@@ -161,17 +180,17 @@ Here is an example that extends the Template class to follow the bootstrap form-
 			    
 			    const t = new BootstrapTemplate();
 			     
-			    t.div({class:'container'},()=>{
-				    t.div({class:'row'},()=>{
+			    t.container(()=>{
+				    t.row(()=>{
 					    
-					    t.div({class:'col-lg-6'},()=>{
+					    t.col({val:6},()=>{
 							
 							//Use our extended method to render the bootstrap form-group template
 							t.inputField({label:'Input 1'});
 							
 						});//div
 						
-						t.div({class:'col-lg-6'},()=>{
+						t.col({val:6},()=>{
 							
 							//Use our extended method to render the bootstrap form-group template
 							t.inputField({
@@ -179,10 +198,11 @@ Here is an example that extends the Template class to follow the bootstrap form-
 								value:'test value'
 							});
 							
-						});//div
+						});//col
 						
-				    });//div
-			    ;});//div
+				    });//row
+
+			    ;});//container
 				
 				document.getElementById('root').append(t.compile());
 			 </script>
@@ -191,5 +211,100 @@ Here is an example that extends the Template class to follow the bootstrap form-
 
 
 
+**Adding textNodes**
 
+You can add textNodes inside an element and treat them as javasript objects.
+
+	const t = new Template();
+
+	let text = t.txt('Hello World');
+	
+	t.div(()=>{
+		t.el(text);
+		t.txt('This one has not');
+	});
+
+	text.nodeValue = 'This text has changed');
+
+	document.body.append(t.compile());
+
+**Binding object**
+
+You can bind an array of objects that will automatically render to the dom. And any changes you make to the object will automatically render in the dom. You can also optionally bind back data from the dom to your object.
+
+	const t = new Template();
+
+	let model = [
+		{
+			name:'Jerry',
+			age:'21',
+		},
+		{
+			name:'Beth',
+			age:'20'
+		}
+	];
+
+	/**
+		args1 = An array of similarly structured objects.
+		args2 = A callback on how to render the template.
+		args3 = An object literal map on how to handle updates in the template.
+	**/
+	let model = t.bind(model,(handle,item)=>{
+		return t.div(()=>{
+			handle.name = t.h3(item.name);
+			handle.age = t.input({type:'text',value:item.age});
+
+			//This will make any value changes made to the input element automatically reflect back to the corresponding object property
+			handle.age.onkeyup = function(){
+				item.age = this.value;
+			};
+
+			t.br();
+		});
+	},{
+		name:(handle,value)=>{
+			handle.innerHTML = value;
+		},
+		age:(handle,value)=>{
+			handle.value = value;
+		}
+	});
+
+	//You can manipulate the model and see real time updates on the dom
+	model[0].name = 'This name was changed to Joseph';
+
+	//You can add new items and see real time updates on the dom
+	model.data.insert({
+		name:'Sheena',
+		age:'22'
+	});
+
+	//You can even add new items at specific at a specific index and still see real time updates on the dom
+	model.data.insert({
+		name:'JP',
+		age:'30'
+	},2); //Insert at index 2;
+
+	//Get the length of the new array
+	console.log(model.length);
+
+	//To see and access other methods of the bind object
+	console.log(model.data);
+
+	/**
+		e.g.
+			
+			model.data.remove(index);
+				- Removes an object and updates the dom at a specific index
+
+			model.data.map()
+				- A method to call the Array.map() function
+
+	**/
+
+	document.body.append(t.compile());
+
+
+	
 ###To be continued...
