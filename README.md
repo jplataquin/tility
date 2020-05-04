@@ -18,9 +18,9 @@ If you are using npm.
 
 or you can to download the zip file, place it in your directory and use ESM import.
 
-    ```javascript
-    import {Template,View,Component} from './path-to-tility/src/tility.js'
-	```
+```javascript
+	import {Template,View,Component} from './path-to-tility/src/tility.js'
+ ```
 # Template Class
 **Basic Usage** 
 
