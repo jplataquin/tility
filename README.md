@@ -26,38 +26,39 @@ or you can to download the zip file, place it in your directory and use ESM impo
 
 The Template class allows you to create HTML tags from the Template object instance using their names as methods. They can be ordered and arranged like regular HTML tags and can be treated like regular javascript DOM objects.
 
+```javascript
+	import {Template} from './tility.js';
 
-       import {Template} from './tility.js';
-       
-       //Create a Template instance
-       const t = new Template();
-       
-       //Arrange them as you would like in a normal HTML file.
-       t.h1('Tility test');
-       
-       t.div(()=>{
+	//Create a Template instance
+	const t = new Template();
+
+	//Arrange them as you would like in a normal HTML file.
+	t.h1('Tility test');
+
+	t.div(()=>{
 	       t.h3('Hello World');
-	       
+
 	       //You can get an instance of the element as a variable
 	       //so you can manipulate them like regular DOM objects.
 	       let btn = t.button('how are you?');
-       });
-       
-       btn.onclick = ()=>{ alert("I'm fine thank you"); };
-      
-       //Compile everything to an DOM object in the order that it was written.
-       let content = t.compile();
-       
-       document.body.append(content);
+	});
+
+	btn.onclick = ()=>{ alert("I'm fine thank you"); };
+
+	//Compile everything to an DOM object in the order that it was written.
+	let content = t.compile();
+
+	document.body.append(content);
+```
 The output will be similar to this
 
-    ```html
-    <h1>Tility Test</h1>
-    <div>
+```html
+	<h1>Tility Test</h1>
+	<div>
 	    <h3>Hello World</h3>
 	    <button onclick="alert('Im fine thank you')" >How are you?</button>
-    </div>
-    ```
+	</div>
+```
 
 
 **Adding attributes**
