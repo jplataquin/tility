@@ -18,8 +18,9 @@ If you are using npm.
 
 or you can to download the zip file, place it in your directory and use ESM import.
 
+    ```javascript
     import {Template,View,Component} from './path-to-tility/src/tility.js'
-
+	```
 # Template Class
 **Basic Usage** 
 
@@ -50,11 +51,13 @@ The Template class allows you to create HTML tags from the Template object insta
        document.body.append(content);
 The output will be similar to this
 
+    ```html
     <h1>Tility Test</h1>
     <div>
 	    <h3>Hello World</h3>
 	    <button onclick="alert('Im fine thank you')" >How are you?</button>
-	</div>
+    </div>
+    ```
 
 
 **Adding attributes**
