@@ -391,7 +391,7 @@ class Template {
         this.helper = function(){
 
             return {
-                htmlEscape:(text)=>{
+                htmlEscape:(val)=>{
                     let text = document.createTextNode(val);
                     let dummy = document.createElement('p');
                     dummy.appendChild(text);
