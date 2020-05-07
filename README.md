@@ -133,14 +133,14 @@ As oppose to this:
 
 Avoid the use of innerHTML as it will open your application to possible cross site scripting attacks. 
 
-Instead the Template class offers a .text() method to santize and escape your string before setting it to the innerHTML.
+Instead the Template class offers a element.tmpl.text() method to santize and escape your string before setting it to the innerHTML.
 
 ```javascript
 
-	let div = t.div()
+	let div = t.div();
 
 	//use .text() method to escape html tags
-	div.text(`
+	div.tmpl.text(`
 		<h1>This will not appear as an h1 tag </h1>
 	`);
 
@@ -148,21 +148,21 @@ Instead the Template class offers a .text() method to santize and escape your st
 
 	let username = 'foo';
 
-	span.text(username);
+	span.tmpl.text(username);
 
 	document.body.append(t.compile());
 	
 ```
-**The Template elements are overloaded with additional methods aside from text()**
+**The Template elements have a .tmpl property with useful methods aside from text()**
 
-1.) The observe() method allows handling of changes in the element via observables pattern.
+1.) The element.tmpl.observe() method allows handling of changes in the element via observables pattern.
 ```javascript
 
 	let h1 = t.h1({class:'a'},()=>{
 		t.txt('Hello Wolrd');
 	});
 
-	let h1_observable = h1.observe();
+	let h1_observable = h1.tmpl.observe();
 
 	//Observe for attribute change
 	let attr_observe = h1_observable.on(function(mutation,observer){
@@ -190,10 +190,11 @@ Instead the Template class offers a .text() method to santize and escape your st
 		h1_observable.disconnect();
 
 		alert('Observer disconnected');
+
 	},5000)
 ```
 
-2.) The shadow() method creates a shadow dom than can be appended to other elments.
+2.) The element.tmpl.shadow() method creates a shadow dom than can be appended to other elments.
 ```javascript
 
 	let shadow = t.div(()=>{
@@ -202,7 +203,7 @@ Instead the Template class offers a .text() method to santize and escape your st
 
 	let regularDiv = t.div();
 
-	regularDiv.shadow('open',shadow);
+	regularDiv.tmpl.shadow('open',shadow);
 
 	document.body.append(regularDiv);
 

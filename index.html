@@ -35,13 +35,14 @@
             });
 
             
-                let div = t.div()
+            let div = t.div();
 
             //use .text() method to escape html tags in your string
-            div.text(`
+            div.tmpl.text(`
                 <h1>This will not appear as an h1 tag </h1>
             `);
 
+            
             document.body.append(t.compile());
         })();
     </script>

@@ -92,13 +92,15 @@ class Template {
                 callback = param;
             }
 
-            el.text = function(val){
+            el.tmpl = {};
+
+            el.tmpl.text = function(val){
                 let dummy = document.createElement('p');
                 dummy.textContent = val;
                 el.innerHTML = dummy.innerHTML;
             }
 
-            el.observe = function(config){
+            el.tmpl.observe = function(config){
 
                 let callback =[];
 
@@ -127,7 +129,7 @@ class Template {
                 };
             };
 
-            el.shadow = function(mode,dom){
+            el.tmpl.shadow = function(mode,dom){
                 this.attachShadow({mode:mode}).append(dom);
             };
 
