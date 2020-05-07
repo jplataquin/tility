@@ -1,5 +1,5 @@
 # What is Tility?
-Tility is a suite of classes that will help you build dynamic HTML interfaces and Single Page Applications using Javascript. It is designed to keep your code intuitive and simple amidst complex project requirements.
+Tility is a suite of classes that will help you build dynamic HTML interfaces and Single Page Applications using Javascript. It is designed to keep your code intuitive and simple amidst complex application requirements.
 
 Tility offers 3 classes to aid you in your next project.
 
@@ -14,7 +14,7 @@ Tility offers 3 classes to aid you in your next project.
 
 If you are using npm.
 
-    npm i tility
+    npm install tility
 
 or you can to download the zip file, place it in your directory and use ESM import.
 
@@ -22,6 +22,7 @@ or you can to download the zip file, place it in your directory and use ESM impo
 	import {Template,View,Component} from './path-to-tility/src/tility.js'
  ```
 # Template Class
+
 **Basic Usage** 
 
 The Template class allows you to create HTML tags from the Template object instance using their names as methods. They can be ordered and arranged like regular HTML tags and can be treated like regular javascript DOM objects.
@@ -61,30 +62,155 @@ The output will be similar to this
 ```
 
 
-**Adding attributes**
+**Adding Attributes**
 
-You can also add attributes to them by using an object literal as an argument.
+You can add element attributes by using an object literal as the first argument in your method call. The key of the object is mapped to the attribute name, and the value of the key becomes the value of the attribute. Note that for all native HTML elements, their attribute values are automatically sanitized and converted to escaped HTML string.
 
-    const t = new Template();
-    
-    let content = t.div({class:'col-lg-12',id:'myID'},()=>{
-	    
-	    t.input({value:'hello world',type:'text'});
-	    
-    });
-    
-    document.body.append(content);
+```javascript
+	const t = new Template();
 
+	let content = t.div({class:'col-lg-12',id:'myID'},()=>{
+		
+		t.input({value:'hello world',type:'text'});
+		
+	});
+
+	document.body.append(content);
+```
 This code would result into 
-
+```html
     <div class="col-lg-12" id="myID">
 	    <input type="text" value="hello world"/>
 	</div>
+```
 
-**Using loops, if statements, and built in methods**
+**Style Attribute of Element**
+
+The style attribute of an element has two ways of parsing the value.
+```javascript
+
+	//Object parse
+	t.div({
+		id:'myDiv',
+		style:{
+			'background-color':'red',
+			padding:'20px'
+		}
+	},()=>{
+		t.txt('Test Div');
+	});
+
+	//Free string
+	t.div({
+		id:'myDiv',
+		style:'background-color:red;padding:20px'
+	},()=>{
+		t.txt('Test Div');
+	});
+```
+**Inline Event Handlers**
+
+Setting inline event handlers are no longer necessary since you already have direct access to the element instance
+
+Recommended way:
+```javascript
+
+	let button = t.button('Click Me');
+
+	button.click = function(){
+		alert("I'm clicked");
+	}
+```
+As oppose to this:
+```javascript
+
+	let button = t.button({onclick:`alert('Im clicked')`}, ()=>{
+		t.txt('Click Me');
+	});
+
+```
+**Avoid using innerHTML**
+
+Avoid the use of innerHTML as it will open your application to possible cross site scripting attacks. 
+
+Instead the Template class offers a .text() method to santize and escape your string before setting it to the innerHTML.
+
+```javascript
+
+	let div = t.div()
+
+	//use .text() method to escape html tags
+	div.text(`
+		<h1>This will not appear as an h1 tag </h1>
+	`);
+
+	let span = t.span();
+
+	let username = 'foo';
+
+	span.text(username);
+
+	document.body.append(t.compile());
+	
+```
+**The Template elements are overloaded with additional methods aside from text()**
+
+1.) The observe() method allows handling of changes in the element via observables pattern.
+```javascript
+
+	let h1 = t.h1({class:'a'},()=>{
+		t.txt('Hello Wolrd');
+	});
+
+	let h1_observable = h1.observe();
+
+	//Observe for attribute change
+	let attr_observe = h1_observable.on(function(mutation,observer){
+
+	});
+
+	//Observe for changes in children
+	let child_observe = h1_observable.on(function(mutation,observer){
+
+	});
+
+
+	setTimeout(()=>{
+		h1.classList.add('b');
+	},3000);
+
+	setTimeout(()=>{
+		h1.append(t.span('How are you?'));
+	},3000);
+
+	setTimeout(()=>{
+		
+		console.log('List of mutation records',h1_observable.takeRecords());
+
+		h1_observable.disconnect();
+
+		alert('Observer disconnected');
+	},5000)
+```
+
+2.) The shadow() method creates a shadow dom than can be appended to other elments.
+```javascript
+
+	let shadow = t.div(()=>{
+		t.h1('This is a shadow dom');
+	});
+
+	let regularDiv = t.div();
+
+	regularDiv.shadow('open',shadow);
+
+	document.body.append(regularDiv);
+
+```
+**Using Loops, If Statements, and Native Methods**
 
 The Template class allows you to manipulate HTML tags as if they were javascript variables and objects. 
-
+```javascript
     const t = new Template();
     
     let arr = ['a','b','c','d'];
@@ -122,6 +248,8 @@ The Template class allows you to manipulate HTML tags as if they were javascript
 	}));
 	
 	document.body.append(t.compile());
+```
+
 **You can extend the Template class to create psuedo components**
 
 Sometimes you want to speed things up by writing reusable HTML templates, but you don't want to create a full blown web components or you just want to keep things simple. 
@@ -129,7 +257,7 @@ Sometimes you want to speed things up by writing reusable HTML templates, but yo
 Here is an example that extends the Template class to follow the bootstrap html template.
 
 *BootstrapTemplate.js*
-
+```javascript
     import {Template} from './tility.js';
     
     export class BootstrapTemplate extends Template{
@@ -168,9 +296,9 @@ Here is an example that extends the Template class to follow the bootstrap html 
 			});
 		}
 	}
-
+```
 *index.html*
-
+```html
     <!DOCTYPE html>
 	<html lang="en">
 		<head>
@@ -212,13 +340,13 @@ Here is an example that extends the Template class to follow the bootstrap html 
 			 </script>
 		</body>
 	</html>
-
+```
 
 
 **Adding textNodes**
 
 You can add textNodes inside an element and treat them as javasript objects.
-
+```javascript
 	const t = new Template();
 
 	let text = t.txt('Hello World');
@@ -231,7 +359,7 @@ You can add textNodes inside an element and treat them as javasript objects.
 	text.nodeValue = 'This text has changed');
 
 	document.body.append(t.compile());
-
+```
 **Binding object**
 
 You can bind an array of objects that will automatically render to the dom. And any changes you make to the object will automatically render in the dom. You can also optionally bind back data from the dom to your object.

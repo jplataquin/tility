@@ -1,6 +1,6 @@
 {
   "name": "tility",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Tility is a suite of classes that will help you build dynamic HTML interfaces and Single Page Applications using Javascript. It is designed to keep your code intuitive and simple amidst complex project requirements.",
   "main": "lib/tility.js",
   "module": "src/tility.js",

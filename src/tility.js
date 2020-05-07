@@ -40,16 +40,15 @@ class Template {
             for(var key in param){
 
                 if(key == 'style'){
-               
                     param[key] = toCSS(param[key]);
-               
                 }
 
                 let text = document.createTextNode(param[key]);
                 let dummy = document.createElement('p');
                 dummy.appendChild(text);
     
-                el.setAttribute(key,dummy.innerHTML);
+                el.setAttribute(key,dummy.innerText);
+                    
                    
             }  
            
@@ -94,10 +93,8 @@ class Template {
             }
 
             el.text = function(val){
-                let text = document.createTextNode(val);
                 let dummy = document.createElement('p');
-                dummy.appendChild(text);
-    
+                dummy.textContent = val;
                 el.innerHTML = dummy.innerHTML;
             }
 
@@ -296,111 +293,117 @@ class Template {
             this[name] = function(param,callback){
                 return processElement(name,param,callback);
             }
+
+            //Compile content to a dom fragment and clear content
+        
         });
 
-        //Setup method for style tag
-        this.style = function(css){
-           
-            var style = processComponent('style',{},()=>{});
-            let stylesheet = "\n";
 
-            //Prepare stylesheet
-            Object.keys(css).map((selector) => {
+        //Strange hack to prevent users from overiding main methods
+        let dum = [1];
+        dum.map(()=>{
 
-                //Free text mode
-                if(selector == '--'){
-                    
-                    stylesheet += css[selector]+"\n";
+            //Setup method for textNode
+            this.txt = function(value){
+                var t = document.createTextNode(value);
+            
+                content.append(t);
 
-                }else{
-
-                    //Key value pair mode
-                    stylesheet += "["+styleScope+"] "+selector+" {\n";
-
-                        for(let key in css[selector]){
-                            stylesheet += "\t"+key+':'+css[selector][key]+";\n";
-                        }
-                    
-                    stylesheet += "} \n\n";
-                }
-            });
-
-            //Setup stylesheet
-            style.innerHTML = stylesheet;
-         
-            return style;
-        }
-
-        //Setup method for textNode
-        this.txt = function(value){
-            var t = document.createTextNode(value);
-           
-            content.append(t);
-
-            return t;
-        }
-
-        //Setup method for documentFragment
-        this.frag = function(callback){
-            return processElement('frag',{},callback);
-        }
-
-        //Create method to handle dom elements and string input
-        this.el = function(el,param,callback){
-        
-            if(typeof el == 'string'){
-               
-                let n = document.createDocumentFragment();
-
-                let div = document.createElement('div');
-
-                div.innerHTML = el;
-
-                let childArray = Array.from(div.children);
-                
-                childArray.forEach((child)=>{
-                    n.append(child);
-                });
-
-                el = n;
+                return t;
             }
 
-            processElement(el,param,callback);
-        }
+            //Setup method for documentFragment
+            this.frag = function(callback){
+                return processElement('frag',{},callback);
+            }
 
-        //Method to define element and add custom element as method to template
-        this.defineElement = function(name, options, constructor){
-           
-            customElements.define(name, constructor, options);
-          
-            this[ name.replace(/\-/g,'_') ] = function(param,callback){
-                return processElement(name,param,callback);
-            } 
+            //Setup method for style tag
+            this.style = function(css){
+            
+                var style = processComponent('style',{},()=>{});
+                let stylesheet = "\n";
 
-        }
+                //Prepare stylesheet
+                Object.keys(css).map((selector) => {
 
-        //Compile content to a dom fragment and clear content
-        this.compile = function(){
-            let buffer = content;
-            content = document.createDocumentFragment();
-            og = content;
-            return buffer;
-        }
+                    //Free text mode
+                    if(selector == '--'){
+                        
+                        stylesheet += css[selector]+"\n";
 
-        //Helper functions
-        this.helper = function(){
+                    }else{
 
-            return {
+                        //Key value pair mode
+                        stylesheet += "["+styleScope+"] "+selector+" {\n";
+
+                            for(let key in css[selector]){
+                                stylesheet += "\t"+key+':'+css[selector][key]+";\n";
+                            }
+                        
+                        stylesheet += "} \n\n";
+                    }
+                });
+
+                //Setup stylesheet
+                style.innerHTML = stylesheet;
+            
+                return style;
+            }
+            //Create method to handle dom elements and string input
+            this.el = function(el,param,callback){
+            
+                if(typeof el == 'string'){
+                
+                    let n = document.createDocumentFragment();
+
+                    let div = document.createElement('div');
+
+                    div.innerHTML = el;
+
+                    let childArray = Array.from(div.children);
+                    
+                    childArray.forEach((child)=>{
+                        n.append(child);
+                    });
+
+                    el = n;
+                }
+
+                processElement(el,param,callback);
+            }
+
+            //Method to define element and add custom element as method to template
+            this.defineElement = function(name, options, constructor){
+            
+                customElements.define(name, constructor, options);
+            
+                this[ name.replace(/\-/g,'_') ] = function(param,callback){
+                    return processElement(name,param,callback);
+                } 
+
+            }
+
+            //Compile dom
+            this.compile = function(){
+                let buffer = content;
+                content = document.createDocumentFragment();
+                og = content;
+                return buffer;
+            }
+
+            //Helper functions
+            this.helper = {
                 htmlEscape:(val)=>{
                     let text = document.createTextNode(val);
                     let dummy = document.createElement('p');
                     dummy.appendChild(text);
         
-                    return dummy.innerHTML;
+                    return dummy.innerText;
                 }
             }
-        }
-
+        });
+     
+      
      }
 
 

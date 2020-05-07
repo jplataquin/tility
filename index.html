@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <script>
+        (async ()=>{
+            let {Template} = await import('/src/tility.js');
+
+            class pop extends Template{
+                constructor(){
+                    super();
+                }
+
+                _kwak(){
+                    return this.h1('123ok');
+                }
+
+           
+
+                kwak(){
+                    return this.h1('TAE');
+                }
+            }
+            let t = new pop();
+
+            
+             t.div({},()=>{
+                let k = t.h1('ayos');
+                
+            });
+
+            
+                let div = t.div()
+
+            //use .text() method to escape html tags in your string
+            div.text(`
+                <h1>This will not appear as an h1 tag </h1>
+            `);
+
+            document.body.append(t.compile());
+        })();
+    </script>
+</body>
+</html>
